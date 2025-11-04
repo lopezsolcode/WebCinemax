@@ -16,6 +16,9 @@ builder.Services.AddDbContextFactory<CineDbContext>(options =>
 
 // 🔹 Registrar servicios propios
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<PeliculaService>();
+builder.Services.AddScoped<SalaService>();
+builder.Services.AddScoped<FuncionService>();
 builder.Services.AddScoped<Microsoft.AspNetCore.Identity.IPasswordHasher<WebCinemax.Models.Usuario>,
                             Microsoft.AspNetCore.Identity.PasswordHasher<WebCinemax.Models.Usuario>>();
 builder.Services.AddScoped<CustomAuthenticationStateProvider>();

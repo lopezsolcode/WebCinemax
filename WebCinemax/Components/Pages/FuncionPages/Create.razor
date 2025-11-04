@@ -4,27 +4,34 @@
 @inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Crear Función</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Funcion</h2>
+<h1>Crear Función</h1>
 <hr />
+
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="Funcion" OnValidSubmit="AddFuncion" FormName="create" Enhance>
+        <EditForm Model="Funcion" OnValidSubmit="AddFuncion">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" role="alert" />
+
             <div class="mb-3">
-                <label for="fechahora" class="form-label">FechaHora:</label> 
-                <InputDate id="fechahora" @bind-Value="Funcion.FechaHora" class="form-control" /> 
-                <ValidationMessage For="() => Funcion.FechaHora" class="text-danger" /> 
-            </div>        
+                <label for="fecha" class="form-label">Fecha:</label>
+                <InputDate id="fecha" @bind-Value="SelectedDate" class="form-control" />
+                <ValidationMessage For="() => SelectedDate" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="precioentrada" class="form-label">PrecioEntrada:</label> 
-                <InputNumber id="precioentrada" @bind-Value="Funcion.PrecioEntrada" class="form-control" /> 
-                <ValidationMessage For="() => Funcion.PrecioEntrada" class="text-danger" /> 
-            </div>    
+                <label for="hora" class="form-label">Hora:</label>
+                <InputText id="hora" @bind-Value="SelectedTimeString" type="time" class="form-control" />
+                <ValidationMessage For="() => SelectedTimeString" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="precioentrada" class="form-label">Precio de entrada:</label>
+                <InputNumber id="precioentrada" @bind-Value="Funcion.PrecioEntrada" class="form-control" />
+                <ValidationMessage For="() => Funcion.PrecioEntrada" class="text-danger" />
+            </div>
 
             <div class="mb-3">
                 <label for="pelicula" class="form-label">Película:</label>
@@ -37,7 +44,7 @@
                 </InputSelect>
                 <ValidationMessage For="() => Funcion.IdPelicula" class="text-danger" />
             </div>
-            
+
             <div class="mb-3">
                 <label for="sala" class="form-label">Sala:</label>
                 <InputSelect id="sala" @bind-Value="Funcion.IdSala" class="form-select">
@@ -50,20 +57,30 @@
                 <ValidationMessage For="() => Funcion.IdSala" class="text-danger" />
             </div>
 
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Crear</button>
+            <a href="/funcions" class="btn btn-secondary ms-2">Volver</a>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/funcions">Back to List</a>
-</div>
-
 @code {
-    [SupplyParameterFromForm]
     private Funcion Funcion { get; set; } = new();
     private List<Pelicula> Peliculas = new();
     private List<Sala> Salas = new();
+    private DateTime SelectedDate { get; set; } = DateTime.Today;
+    private TimeSpan SelectedTime { get; set; } = DateTime.Now.TimeOfDay;
+    private string SelectedTimeString
+    {
+        get => SelectedTime.ToString(@"hh\:mm"); // Formato para el control de tiempo (HH:mm)
+        set
+        {
+            if (TimeSpan.TryParse(value, out var parsedTime))
+            {
+                SelectedTime = parsedTime;
+            }
+        }
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,10 +89,20 @@
         Salas = await context.Salas.ToListAsync();
     }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddFuncion()
     {
         using var context = DbFactory.CreateDbContext();
+
+
+        // Validación simple
+        if (Funcion.IdPelicula == 0 || Funcion.IdSala == 0)
+        {
+            // Se podría mostrar mensaje de error aquí, pero el ValidationSummary ya cubrirá los errores de formulario.
+            return;
+        }
+
+
+        Funcion.FechaHora = SelectedDate.Date + SelectedTime;
         context.Funciones.Add(Funcion);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/funcions");

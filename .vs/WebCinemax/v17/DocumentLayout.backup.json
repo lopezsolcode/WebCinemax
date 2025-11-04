@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\funcionpages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\funcionpages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\funcionpages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\funcionpages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 319,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\FuncionPages\\Create.razor",
+              "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\FuncionPages\\Create.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\FuncionPages\\Create.razor",
+              "RelativeToolTip": "WebCinemax\\Components\\Pages\\FuncionPages\\Create.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T18:16:27.053Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Index.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\FuncionPages\\Index.razor",
+              "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\FuncionPages\\Index.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\FuncionPages\\Index.razor",
+              "RelativeToolTip": "WebCinemax\\Components\\Pages\\FuncionPages\\Index.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T16:07:12.137Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,49 +1,47 @@
 ﻿@page "/salas/create"
-@using Microsoft.EntityFrameworkCore
 @using WebCinemax.Models
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using WebCinemax.Services
+@inject SalaService SalaService
 @inject NavigationManager NavigationManager
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<h1>Crear sala</h1>
 
-<h2>Sala</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="Sala" OnValidSubmit="AddSala" FormName="create" Enhance>
+        <EditForm Model="Sala" OnValidSubmit="GuardarSala">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" />
+
             <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre:</label> 
-                <InputText id="nombre" @bind-Value="Sala.Nombre" class="form-control" /> 
-                <ValidationMessage For="() => Sala.Nombre" class="text-danger" /> 
-            </div>        
+                <label for="nombre" class="form-label">Nombre:</label>
+                <InputText id="nombre" @bind-Value="Sala.Nombre" class="form-control" />
+                <ValidationMessage For="() => Sala.Nombre" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="capacidad" class="form-label">Capacidad:</label> 
-                <InputNumber id="capacidad" @bind-Value="Sala.Capacidad" class="form-control" /> 
-                <ValidationMessage For="() => Sala.Capacidad" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="capacidad" class="form-label">Capacidad:</label>
+                <InputNumber id="capacidad" @bind-Value="Sala.Capacidad" class="form-control" />
+                <ValidationMessage For="() => Sala.Capacidad" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear</button>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/salas">Back to List</a>
+<div class="mt-3">
+    <a href="/salas">Volver al listado</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
     private Sala Sala { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task AddSala()
+    private async Task GuardarSala()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Salas.Add(Sala);
-        await context.SaveChangesAsync();
+        await SalaService.AddAsync(Sala);
         NavigationManager.NavigateTo("/salas");
     }
 }

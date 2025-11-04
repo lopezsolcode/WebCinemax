@@ -1,37 +1,56 @@
 ﻿@page "/salas"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using WebCinemax.Models
-@using WebCinemax.Models
-@implements IAsyncDisposable
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using WebCinemax.Services
+@inject SalaService SalaService
+@inject NavigationManager Navigation
 
-<PageTitle>Index</PageTitle>
-
-<h1>Index</h1>
+<h1>Salas</h1>
 
 <p>
-    <a href="salas/create">Create New</a>
+    <button class="btn btn-primary" @onclick="CrearNueva">Crear nueva</button>
 </p>
 
-<QuickGrid Class="table" Items="context.Salas">
-    <PropertyColumn Property="sala => sala.Nombre" />
-    <PropertyColumn Property="sala => sala.Capacidad" />
-
-    <TemplateColumn Context="sala">
-        <a href="@($"salas/edit?idsala={sala.IdSala}")">Edit</a> |
-        <a href="@($"salas/details?idsala={sala.IdSala}")">Details</a> |
-        <a href="@($"salas/delete?idsala={sala.IdSala}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+@if (salas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Capacidad</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in salas)
+            {
+                <tr>
+                    <td>@s.Nombre</td>
+                    <td>@s.Capacidad</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => Editar(s.IdSala)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarConfirmado(s.IdSala)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private CineDbContext context = default!;
+    private List<Sala>? salas;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        salas = await SalaService.GetAllAsync();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private void CrearNueva() => Navigation.NavigateTo("/salas/create");
+
+    private void Editar(int id) => Navigation.NavigateTo($"/salas/edit/{id}");
+
+    private void EliminarConfirmado(int id) => Navigation.NavigateTo($"/salas/delete/{id}");
 }

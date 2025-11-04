@@ -1,40 +1,61 @@
 ﻿@page "/peliculas"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using WebCinemax.Models
-@implements IAsyncDisposable
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using WebCinemax.Services
+@inject PeliculaService PeliculaService
+@inject NavigationManager Navigation
 
-<PageTitle>Index</PageTitle>
-
-<h1>Index</h1>
+<h1>Películas</h1>
 
 <p>
-    <a href="peliculas/create" class="btn btn-primary">Create New</a>
+    <button class="btn btn-primary" @onclick="CrearNueva">Crear nueva</button>
 </p>
 
-<QuickGrid Class="table" Items="context.Peliculas">
-    <PropertyColumn Property="pelicula => pelicula.Titulo" />
-    <PropertyColumn Property="pelicula => pelicula.Genero" />
-    <PropertyColumn Property="pelicula => pelicula.Clasificacion" />
-    <PropertyColumn Property="pelicula => pelicula.DuracionMinutos" />
-    <PropertyColumn Property="pelicula => pelicula.Idioma" />
-    <PropertyColumn Property="pelicula => pelicula.PosterUrl" />
-
-    <TemplateColumn Context="pelicula">
-        <a href="@($"peliculas/edit?idpelicula={pelicula.IdPelicula}")]" class="btn btn-secondary">Edit</a> |
-        <a href="@($"peliculas/details?idpelicula={pelicula.IdPelicula}")" class="btn btn-success">Details</a> |
-        <a href="@($"peliculas/delete?idpelicula={pelicula.IdPelicula}")" class="btn btn-danger">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+@if (peliculas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Género</th>
+                <th>Duración</th>
+                <th>Idioma</th>
+                <th>Poster URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in peliculas)
+            {
+                <tr>
+                    <td>@p.Titulo</td>
+                    <td>@p.Genero</td>
+                    <td>@p.DuracionMinutos</td>
+                    <td>@p.Idioma</td>
+                    <td>@p.PosterUrl</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => Editar(p.IdPelicula)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarConfirmado(p.IdPelicula)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private CineDbContext context = default!;
+    private List<Pelicula>? peliculas;
 
-    protected override void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        peliculas = await PeliculaService.GetAllAsync();
     }
+    private void CrearNueva() => Navigation.NavigateTo("/peliculas/create");
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private void Editar(int id) => Navigation.NavigateTo($"/peliculas/edit/{id}");
+
+    private void EliminarConfirmado(int id) => Navigation.NavigateTo($"/peliculas/delete/{id}");
 }
