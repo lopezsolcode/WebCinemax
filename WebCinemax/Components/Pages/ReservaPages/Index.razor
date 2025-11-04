@@ -1,0 +1,37 @@
+﻿@page "/reservas"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using WebCinemax.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="reservas/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Reservas">
+    <PropertyColumn Property="reserva => reserva.FechaReserva" />
+    <PropertyColumn Property="reserva => reserva.Confirmada" />
+    <PropertyColumn Property="reserva => reserva.IdFuncion" />
+
+    <TemplateColumn Context="reserva">
+        <a href="@($"reservas/edit?idreserva={reserva.IdReserva}")">Edit</a> |
+        <a href="@($"reservas/details?idreserva={reserva.IdReserva}")">Details</a> |
+        <a href="@($"reservas/delete?idreserva={reserva.IdReserva}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private CineDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

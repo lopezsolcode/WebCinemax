@@ -1,0 +1,78 @@
+﻿@page "/butacas/create"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Butaca</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Butaca" OnValidSubmit="AddButaca" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="numero" class="form-label">Numero:</label> 
+                <InputNumber id="numero" @bind-Value="Butaca.Numero" class="form-control" /> 
+                <ValidationMessage For="() => Butaca.Numero" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="fila" class="form-label">Fila:</label> 
+                <InputText id="fila" @bind-Value="Butaca.Fila" class="form-control" /> 
+                <ValidationMessage For="() => Butaca.Fila" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="esvip" class="form-label">EsVip:</label> 
+                <InputCheckbox id="esvip" @bind-Value="Butaca.EsVip" class="form-check-input" /> 
+                <ValidationMessage For="() => Butaca.EsVip" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="esaccesible" class="form-label">EsAccesible:</label> 
+                <InputCheckbox id="esaccesible" @bind-Value="Butaca.EsAccesible" class="form-check-input" /> 
+                <ValidationMessage For="() => Butaca.EsAccesible" class="text-danger" /> 
+            </div> 
+            
+            <div class="mb-3">
+                <label for="sala" class="form-label">Sala:</label>
+                <InputSelect id="sala" @bind-Value="Butaca.IdSala" class="form-select">
+                    <option value="">-- Seleccione una sala --</option>
+                    @foreach (var sala in Salas)
+                    {
+                        <option value="@sala.IdSala">@sala.Nombre</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Butaca.IdSala" class="text-danger" />
+            </div>
+      
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/butacas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Butaca Butaca { get; set; } = new();
+    private List<Sala> Salas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Salas = await context.Salas.ToListAsync();
+    }
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddButaca()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Butacas.Add(Butaca);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/butacas");
+    }
+}

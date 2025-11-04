@@ -1,0 +1,127 @@
+﻿@page "/funcions/edit"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Funcion</h2>
+<hr />
+@if (Funcion is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Funcion" OnValidSubmit="UpdateFuncion" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Funcion.IdFuncion" value="@Funcion.IdFuncion" />
+                <div class="mb-3">
+                    <label for="fechahora" class="form-label">FechaHora:</label>
+                    <InputDate id="fechahora" @bind-Value="Funcion.FechaHora" class="form-control" />
+                    <ValidationMessage For="() => Funcion.FechaHora" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="precioentrada" class="form-label">PrecioEntrada:</label>
+                    <InputNumber id="precioentrada" @bind-Value="Funcion.PrecioEntrada" class="form-control" />
+                    <ValidationMessage For="() => Funcion.PrecioEntrada" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="pelicula" class="form-label">Película:</label>
+                    <InputSelect id="pelicula" @bind-Value="Funcion.IdPelicula" class="form-select">
+                        <option value="">-- Seleccione una película --</option>
+                        @foreach (var pelicula in Peliculas)
+                        {
+                            <option value="@pelicula.IdPelicula">@pelicula.Titulo</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Funcion.IdPelicula" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="sala" class="form-label">Sala:</label>
+                    <InputSelect id="sala" @bind-Value="Funcion.IdSala" class="form-select">
+                        <option value="">-- Seleccione una sala --</option>
+                        @foreach (var sala in Salas)
+                        {
+                            <option value="@sala.IdSala">@sala.Nombre</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => Funcion.IdSala" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/funcions">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int IdFuncion { get; set; }
+
+    [SupplyParameterFromForm]
+    private Funcion? Funcion { get; set; }
+
+    private List<Pelicula> Peliculas = new();
+    private List<Sala> Salas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Peliculas = await context.Peliculas.ToListAsync();
+        Salas = await context.Salas.ToListAsync();
+
+        // 2. Cargar la función a editar
+        Funcion ??= await context.Funciones
+            .Include(f => f.IdPeliculaNavigation)
+            .Include(f => f.IdSalaNavigation)
+            .FirstOrDefaultAsync(f => f.IdFuncion == IdFuncion);
+        if (Funcion is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateFuncion()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Funcion!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!FuncionExists(Funcion!.IdFuncion))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/funcions");
+    }
+
+    private bool FuncionExists(int idfuncion)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Funciones.Any(e => e.IdFuncion == idfuncion);
+    }
+}

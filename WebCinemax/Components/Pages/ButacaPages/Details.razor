@@ -1,0 +1,54 @@
+﻿@page "/butacas/details"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Butaca</h2>
+    <hr />
+    @if (butaca is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Numero</dt>
+            <dd class="col-sm-10">@butaca.Numero</dd>
+            <dt class="col-sm-2">Fila</dt>
+            <dd class="col-sm-10">@butaca.Fila</dd>
+            <dt class="col-sm-2">EsVip</dt>
+            <dd class="col-sm-10">@butaca.EsVip</dd>
+            <dt class="col-sm-2">EsAccesible</dt>
+            <dd class="col-sm-10">@butaca.EsAccesible</dd>
+            <dt class="col-sm-2">IdSala</dt>
+            <dd class="col-sm-10">@butaca.IdSala</dd>
+        </dl>
+        <div>
+            <a href="@($"/butacas/edit?idbutaca={butaca.IdButaca}")">Edit</a> |
+            <a href="@($"/butacas")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Butaca? butaca;
+
+    [SupplyParameterFromQuery]
+    private int IdButaca { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        butaca = await context.Butacas.FirstOrDefaultAsync(m => m.IdButaca == IdButaca);
+
+        if (butaca is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

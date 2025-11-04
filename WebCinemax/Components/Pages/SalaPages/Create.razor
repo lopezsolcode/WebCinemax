@@ -1,0 +1,49 @@
+﻿@page "/salas/create"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Sala</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Sala" OnValidSubmit="AddSala" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre:</label> 
+                <InputText id="nombre" @bind-Value="Sala.Nombre" class="form-control" /> 
+                <ValidationMessage For="() => Sala.Nombre" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="capacidad" class="form-label">Capacidad:</label> 
+                <InputNumber id="capacidad" @bind-Value="Sala.Capacidad" class="form-control" /> 
+                <ValidationMessage For="() => Sala.Capacidad" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/salas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Sala Sala { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddSala()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Salas.Add(Sala);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/salas");
+    }
+}

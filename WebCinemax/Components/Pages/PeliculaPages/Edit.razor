@@ -1,0 +1,114 @@
+﻿@page "/peliculas/edit"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Pelicula</h2>
+<hr />
+@if (Pelicula is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Pelicula" OnValidSubmit="UpdatePelicula" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Pelicula.IdPelicula" value="@Pelicula.IdPelicula" />
+                <div class="mb-3">
+                    <label for="titulo" class="form-label">Titulo:</label>
+                    <InputText id="titulo" @bind-Value="Pelicula.Titulo" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.Titulo" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="genero" class="form-label">Genero:</label>
+                    <InputText id="genero" @bind-Value="Pelicula.Genero" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.Genero" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="clasificacion" class="form-label">Clasificacion:</label>
+                    <InputText id="clasificacion" @bind-Value="Pelicula.Clasificacion" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.Clasificacion" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="duracionminutos" class="form-label">DuracionMinutos:</label>
+                    <InputNumber id="duracionminutos" @bind-Value="Pelicula.DuracionMinutos" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.DuracionMinutos" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="idioma" class="form-label">Idioma:</label>
+                    <InputText id="idioma" @bind-Value="Pelicula.Idioma" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.Idioma" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="posterurl" class="form-label">PosterUrl:</label>
+                    <InputText id="posterurl" @bind-Value="Pelicula.PosterUrl" class="form-control" />
+                    <ValidationMessage For="() => Pelicula.PosterUrl" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/peliculas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int IdPelicula { get; set; }
+
+    [SupplyParameterFromForm]
+    private Pelicula? Pelicula { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Pelicula ??= await context.Peliculas.FirstOrDefaultAsync(m => m.IdPelicula == IdPelicula);
+
+        if (Pelicula is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdatePelicula()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Pelicula!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!PeliculaExists(Pelicula!.IdPelicula))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/peliculas");
+    }
+
+    private bool PeliculaExists(int idpelicula)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Peliculas.Any(e => e.IdPelicula == idpelicula);
+    }
+}

@@ -1,0 +1,49 @@
+﻿@page "/funcions"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using WebCinemax.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="funcions/create">Create New</a>
+</p>
+@if (Funciones is null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <QuickGrid Class="table table-striped" Items="Funciones.AsQueryable()">
+        <PropertyColumn Property="f => f.FechaHora" Title="Fecha y Hora" />
+        <PropertyColumn Property="f => f.PrecioEntrada" Title="Precio Entrada" />
+        <TemplateColumn Title="Película">
+            @context.IdPeliculaNavigation?.Titulo
+        </TemplateColumn>
+        <TemplateColumn Title="Acciones" Context="f">
+            <a href="@($"funcions/edit?idfuncion={f.IdFuncion}")">Editar</a> |
+            <a href="@($"funcions/details?idfuncion={f.IdFuncion}")">Detalles</a> |
+            <a href="@($"funcions/delete?idfuncion={f.IdFuncion}")">Eliminar</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+@code {
+    private CineDbContext context = default!;
+    private List<Funcion> Funciones = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        Funciones = await context.Funciones
+            .Include(f => f.IdPeliculaNavigation)
+            .Include(f => f.IdSalaNavigation)
+            .ToListAsync();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

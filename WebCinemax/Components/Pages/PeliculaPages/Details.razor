@@ -1,0 +1,56 @@
+﻿@page "/peliculas/details"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Pelicula</h2>
+    <hr />
+    @if (pelicula is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Titulo</dt>
+            <dd class="col-sm-10">@pelicula.Titulo</dd>
+            <dt class="col-sm-2">Genero</dt>
+            <dd class="col-sm-10">@pelicula.Genero</dd>
+            <dt class="col-sm-2">Clasificacion</dt>
+            <dd class="col-sm-10">@pelicula.Clasificacion</dd>
+            <dt class="col-sm-2">DuracionMinutos</dt>
+            <dd class="col-sm-10">@pelicula.DuracionMinutos</dd>
+            <dt class="col-sm-2">Idioma</dt>
+            <dd class="col-sm-10">@pelicula.Idioma</dd>
+            <dt class="col-sm-2">PosterUrl</dt>
+            <dd class="col-sm-10">@pelicula.PosterUrl</dd>
+        </dl>
+        <div>
+            <a href="@($"/peliculas/edit?idpelicula={pelicula.IdPelicula}")">Edit</a> |
+            <a href="@($"/peliculas")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Pelicula? pelicula;
+
+    [SupplyParameterFromQuery]
+    private int IdPelicula { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        pelicula = await context.Peliculas.FirstOrDefaultAsync(m => m.IdPelicula == IdPelicula);
+
+        if (pelicula is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

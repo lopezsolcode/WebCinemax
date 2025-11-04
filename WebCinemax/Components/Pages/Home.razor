@@ -1,0 +1,24 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mt-4">
+            <div class="card-body">
+                <AuthorizeView>
+                    <NotAuthorized>
+                        <span>
+                            Necesitas iniciar sesión para ver este contenido.
+                            Por favor, <a class="fw-bolder" href="/login">haz click aquí</a> para iniciar sesión.
+                        </span>
+                    </NotAuthorized>
+
+                    <Authorized>
+                        <span>Bienvenido <b>@context.User.Identity?.Name</b>.</span>
+                    </Authorized>
+                </AuthorizeView>
+            </div>
+        </div>
+    </div>
+</div>

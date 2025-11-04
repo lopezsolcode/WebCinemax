@@ -1,0 +1,59 @@
+﻿@page "/salas/delete"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>Sala</h2>
+    <hr />
+    @if (sala is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Nombre</dt>
+            <dd class="col-sm-10">@sala.Nombre</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Capacidad</dt>
+            <dd class="col-sm-10">@sala.Capacidad</dd>
+        </dl>
+        <EditForm method="post" Model="sala" OnValidSubmit="DeleteSala" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(sala is null)">Delete</button> |
+            <a href="/salas">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private Sala? sala;
+
+    [SupplyParameterFromQuery]
+    private int IdSala { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        sala = await context.Salas.FirstOrDefaultAsync(m => m.IdSala == IdSala);
+
+        if (sala is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteSala()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Salas.Remove(sala!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/salas");
+    }
+}

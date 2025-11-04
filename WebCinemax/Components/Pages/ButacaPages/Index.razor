@@ -1,0 +1,50 @@
+﻿@page "/butacas"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using WebCinemax.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="butacas/create">Create New</a>
+</p>
+@if (Butacas is null)
+{
+    <p><em>Cargando...</em></p>
+}
+else{
+
+<QuickGrid Class="table table-striped" Items="Butacas.AsQueryable()">
+    <PropertyColumn Property="butaca => butaca.Numero" />
+    <PropertyColumn Property="butaca => butaca.Fila" />
+    <PropertyColumn Property="butaca => butaca.EsVip" />
+    <PropertyColumn Property="butaca => butaca.EsAccesible" />
+    <TemplateColumn Title="Sala">
+            @context.IdSalaNavigation?.Nombre
+    </TemplateColumn>
+
+    <TemplateColumn Context="butaca">
+        <a href="@($"butacas/edit?idbutaca={butaca.IdButaca}")">Edit</a> |
+        <a href="@($"butacas/details?idbutaca={butaca.IdButaca}")">Details</a> |
+        <a href="@($"butacas/delete?idbutaca={butaca.IdButaca}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+}
+
+@code {
+    private CineDbContext context = default!;
+    private List<Butaca> Butacas = new();
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+        Butacas = await context.Butacas
+            .Include(b => b.IdSalaNavigation)
+            .ToListAsync();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,94 @@
+﻿@page "/salas/edit"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Sala</h2>
+<hr />
+@if (Sala is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Sala" OnValidSubmit="UpdateSala" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Sala.IdSala" value="@Sala.IdSala" />
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre:</label>
+                    <InputText id="nombre" @bind-Value="Sala.Nombre" class="form-control" />
+                    <ValidationMessage For="() => Sala.Nombre" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="capacidad" class="form-label">Capacidad:</label>
+                    <InputNumber id="capacidad" @bind-Value="Sala.Capacidad" class="form-control" />
+                    <ValidationMessage For="() => Sala.Capacidad" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/salas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int IdSala { get; set; }
+
+    [SupplyParameterFromForm]
+    private Sala? Sala { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Sala ??= await context.Salas.FirstOrDefaultAsync(m => m.IdSala == IdSala);
+
+        if (Sala is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateSala()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Sala!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!SalaExists(Sala!.IdSala))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/salas");
+    }
+
+    private bool SalaExists(int idsala)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Salas.Any(e => e.IdSala == idsala);
+    }
+}

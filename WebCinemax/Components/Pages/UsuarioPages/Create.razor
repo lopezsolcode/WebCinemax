@@ -1,0 +1,70 @@
+﻿@page "/usuarios/create"
+@using WebCinemax.Models
+@using WebCinemax.Services
+@inject UsuarioService UsuarioService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Crear usuario</PageTitle>
+
+<h1>Crear usuario</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm Model="@NuevoUsuario" OnValidSubmit="AddUsuario">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre:</label>
+                <InputText id="nombre" @bind-Value="NuevoUsuario.Nombre" class="form-control" />
+                <ValidationMessage For="() => NuevoUsuario.Nombre" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <InputText id="username" @bind-Value="NuevoUsuario.Username" class="form-control" />
+                <ValidationMessage For="() => NuevoUsuario.Username" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <InputText id="password" @bind-Value="PlainPassword" type="password" class="form-control" />
+                <ValidationMessage For="() => PlainPassword" class="text-danger" />
+            </div>
+
+            <div class="mb-3">
+                <label for="rol" class="form-label">Rol:</label>
+                <InputText id="rol" @bind-Value="NuevoUsuario.Rol" class="form-control" />
+                <ValidationMessage For="() => NuevoUsuario.Rol" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/">Volver al menú principal</a>
+</div>
+<p>@mensajeexito</p>
+@code {
+    private Usuario NuevoUsuario { get; set; } = new();
+    private string PlainPassword { get; set; } = string.Empty;
+    private string mensajeexito { get; set; }
+
+    private async Task AddUsuario()
+    {
+        var creado = await UsuarioService.CreateAsync(NuevoUsuario, PlainPassword);
+
+        if (creado)
+        {
+            mensajeexito = "Usuario creado exitosamente";
+        }
+        else
+        {
+            // Si el nombre de usuario ya existe, podrías mostrar un mensaje de error
+            Console.WriteLine("El nombre de usuario ya existe.");
+        }
+    }
+}

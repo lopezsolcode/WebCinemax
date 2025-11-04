@@ -1,0 +1,40 @@
+﻿@page "/peliculas"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using WebCinemax.Models
+@implements IAsyncDisposable
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="peliculas/create" class="btn btn-primary">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Peliculas">
+    <PropertyColumn Property="pelicula => pelicula.Titulo" />
+    <PropertyColumn Property="pelicula => pelicula.Genero" />
+    <PropertyColumn Property="pelicula => pelicula.Clasificacion" />
+    <PropertyColumn Property="pelicula => pelicula.DuracionMinutos" />
+    <PropertyColumn Property="pelicula => pelicula.Idioma" />
+    <PropertyColumn Property="pelicula => pelicula.PosterUrl" />
+
+    <TemplateColumn Context="pelicula">
+        <a href="@($"peliculas/edit?idpelicula={pelicula.IdPelicula}")]" class="btn btn-secondary">Edit</a> |
+        <a href="@($"peliculas/details?idpelicula={pelicula.IdPelicula}")" class="btn btn-success">Details</a> |
+        <a href="@($"peliculas/delete?idpelicula={pelicula.IdPelicula}")" class="btn btn-danger">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private CineDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

@@ -1,0 +1,74 @@
+﻿@page "/login" 
+@using WebCinemax.Models
+@using WebCinemax.Models.ViewModels
+@using WebCinemax.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject CineDbContext appContext 
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+@inject UsuarioService UsuarioService
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <EditForm Model="@Model" OnValidSubmit="Authenticate" FormName="LoginForm">
+            <DataAnnotationsValidator/>
+            <div class="mb-3 text-center flex-column">
+                <img src="/images/avatar.png" style="max-height:5rem;" />
+                <h3>Login</h3>
+            </div>
+            <div class="mb-3">
+                <label>Username</label>
+                <InputText @bind-Value="Model.Username" class="form-control" placeholder="Nombre de usuario"/>
+                <ValidationMessage For="() => Model.Username"/>
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText @bind-Value="Model.PasswordHash" class="form-control" type="password" placeholder="Contraseña" />
+                <ValidationMessage For="() => Model.PasswordHash" />
+            </div>
+            <div class="mb-3 text-center">
+                <span class="text-danger">@errorMessage</span>
+            </div>
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public LoginViewModel Model { get; set; } = new();
+
+    private string? errorMessage;
+
+    private async Task Authenticate()
+    {
+        try
+        {
+            // Llamamos al servicio que valida el usuario y verifica el hash
+            var userAccount = await UsuarioService.AuthenticateAsync(Model.Username!, Model.PasswordHash!);
+
+            if (userAccount is null)
+            {
+                errorMessage = "Usuario o contraseña inválidos";
+                return;
+            }
+
+            // Si el usuario existe y la contraseña coincide, iniciamos sesión
+            if (AuthStateProvider is CustomAuthenticationStateProvider customProvider)
+            {
+                await customProvider.SignInAsync(userAccount.Username, userAccount.Rol ?? string.Empty);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Proveedor de autenticación no disponible.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al autenticar: {ex.Message}";
+        }
+    }
+}

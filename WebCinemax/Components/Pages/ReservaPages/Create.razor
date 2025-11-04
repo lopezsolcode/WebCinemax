@@ -1,0 +1,54 @@
+﻿@page "/reservas/create"
+@using Microsoft.EntityFrameworkCore
+@using WebCinemax.Models
+@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Reserva</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Reserva" OnValidSubmit="AddReserva" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="fechareserva" class="form-label">FechaReserva:</label> 
+                <InputDate id="fechareserva" @bind-Value="Reserva.FechaReserva" class="form-control" /> 
+                <ValidationMessage For="() => Reserva.FechaReserva" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="confirmada" class="form-label">Confirmada:</label> 
+                <InputCheckbox id="confirmada" @bind-Value="Reserva.Confirmada" class="form-check-input" /> 
+                <ValidationMessage For="() => Reserva.Confirmada" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="idfuncion" class="form-label">IdFuncion:</label> 
+                <InputNumber id="idfuncion" @bind-Value="Reserva.IdFuncion" class="form-control" /> 
+                <ValidationMessage For="() => Reserva.IdFuncion" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/reservas">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Reserva Reserva { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddReserva()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Reservas.Add(Reserva);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/reservas");
+    }
+}
