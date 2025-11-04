@@ -1,37 +1,73 @@
 ﻿@page "/reservas"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using WebCinemax.Models
-@implements IAsyncDisposable
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using Services
+@inject NavigationManager NavigationManager
+@inject ReservaService ReservaService
 
-<PageTitle>Index</PageTitle>
-
-<h1>Index</h1>
+<h1>Reservas</h1>
 
 <p>
-    <a href="reservas/create">Create New</a>
+    <button class="btn btn-primary" @onclick="CrearNueva">Crear nueva</button>
 </p>
 
-<QuickGrid Class="table" Items="context.Reservas">
-    <PropertyColumn Property="reserva => reserva.FechaReserva" />
-    <PropertyColumn Property="reserva => reserva.Confirmada" />
-    <PropertyColumn Property="reserva => reserva.IdFuncion" />
-
-    <TemplateColumn Context="reserva">
-        <a href="@($"reservas/edit?idreserva={reserva.IdReserva}")">Edit</a> |
-        <a href="@($"reservas/details?idreserva={reserva.IdReserva}")">Details</a> |
-        <a href="@($"reservas/delete?idreserva={reserva.IdReserva}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+@if (reservas == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else if (!reservas.Any())
+{
+    <p>No hay reservas registradas.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Fecha de Reserva</th>
+                <th>Confirmada</th>
+                <th>Película</th>
+                <th>Sala</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in reservas)
+            {
+                <tr>
+                    <td>@r.FechaReserva.ToString("g")</td>
+                    <td>@(r.Confirmada ? "Sí" : "No")</td>
+                    <td>@r.IdFuncionNavigation?.IdPeliculaNavigation?.Titulo</td>
+                    <td>@r.IdFuncionNavigation?.IdSalaNavigation?.Nombre</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => Editar(r.IdReserva)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarConfirmado(r.IdReserva)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-    private CineDbContext context = default!;
+    private List<Reserva>? reservas;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        reservas = await ReservaService.GetAllAsync();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private void CrearNueva()
+    {
+        NavigationManager.NavigateTo("/reservas/create");
+    }
+
+    private void Editar(int idReserva)
+    {
+        NavigationManager.NavigateTo($"/reservas/edit/{idReserva}");
+    }
+
+    private void EliminarConfirmado(int idReserva)
+    {
+        NavigationManager.NavigateTo($"/reservas/delete/{idReserva}");
+    }
 }

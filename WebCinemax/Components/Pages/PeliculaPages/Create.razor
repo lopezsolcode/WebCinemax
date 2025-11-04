@@ -6,9 +6,8 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<h1>Crear nueva película</h1>
 
-<h2>Pelicula</h2>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -16,22 +15,22 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="titulo" class="form-label">Titulo:</label> 
+                <label for="titulo" class="form-label">Título:</label> 
                 <InputText id="titulo" @bind-Value="Pelicula.Titulo" class="form-control" /> 
                 <ValidationMessage For="() => Pelicula.Titulo" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="genero" class="form-label">Genero:</label> 
+                <label for="genero" class="form-label">Género:</label> 
                 <InputText id="genero" @bind-Value="Pelicula.Genero" class="form-control" /> 
                 <ValidationMessage For="() => Pelicula.Genero" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="clasificacion" class="form-label">Clasificacion:</label> 
+                <label for="clasificacion" class="form-label">Clasificación:</label> 
                 <InputText id="clasificacion" @bind-Value="Pelicula.Clasificacion" class="form-control" /> 
                 <ValidationMessage For="() => Pelicula.Clasificacion" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="duracionminutos" class="form-label">DuracionMinutos:</label> 
+                <label for="duracionminutos" class="form-label">Duración (minutos):</label> 
                 <InputNumber id="duracionminutos" @bind-Value="Pelicula.DuracionMinutos" class="form-control" /> 
                 <ValidationMessage For="() => Pelicula.DuracionMinutos" class="text-danger" /> 
             </div>        
@@ -41,18 +40,16 @@
                 <ValidationMessage For="() => Pelicula.Idioma" class="text-danger" /> 
             </div>        
             <div class="mb-3">
-                <label for="posterurl" class="form-label">PosterUrl:</label> 
+                <label for="posterurl" class="form-label">Poster:</label> 
                 <InputText id="posterurl" @bind-Value="Pelicula.PosterUrl" class="form-control" /> 
                 <ValidationMessage For="() => Pelicula.PosterUrl" class="text-danger" /> 
             </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary  mt-3 mb-3 mr-3">Guardar</button>
+            <a class="btn btn-secondary" href="/peliculas">Volver</a>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/peliculas">Back to List</a>
-</div>
 
 @code {
     [SupplyParameterFromForm]

@@ -1,45 +1,47 @@
-﻿@page "/butacas/edit"
+﻿@page "/butacas/edit/{IdButaca:int}"
 @using Microsoft.EntityFrameworkCore
 @using WebCinemax.Models
 @inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Editar Butaca</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Butaca</h2>
+<h1>Editar Butaca</h1>
 <hr />
+
 @if (Butaca is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Cargando...</em></p>
 }
 else
 {
     <div class="row">
         <div class="col-md-4">
-            <EditForm method="post" Model="Butaca" OnValidSubmit="UpdateButaca" FormName="edit" Enhance>
+            <EditForm Model="Butaca" OnValidSubmit="UpdateButaca">
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="Butaca.IdButaca" value="@Butaca.IdButaca" />
+                <ValidationSummary class="text-danger" role="alert" />
+
                 <div class="mb-3">
-                    <label for="numero" class="form-label">Numero:</label>
+                    <label for="numero" class="form-label">Número:</label>
                     <InputNumber id="numero" @bind-Value="Butaca.Numero" class="form-control" />
                     <ValidationMessage For="() => Butaca.Numero" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
                     <label for="fila" class="form-label">Fila:</label>
                     <InputText id="fila" @bind-Value="Butaca.Fila" class="form-control" />
                     <ValidationMessage For="() => Butaca.Fila" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="esvip" class="form-label">EsVip:</label>
+
+                <div class="form-check mb-3">
                     <InputCheckbox id="esvip" @bind-Value="Butaca.EsVip" class="form-check-input" />
+                    <label class="form-check-label" for="esvip">Es VIP</label>
                     <ValidationMessage For="() => Butaca.EsVip" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="esaccesible" class="form-label">EsAccesible:</label>
+
+                <div class="form-check mb-3">
                     <InputCheckbox id="esaccesible" @bind-Value="Butaca.EsAccesible" class="form-check-input" />
+                    <label class="form-check-label" for="esaccesible">Es Accesible</label>
                     <ValidationMessage For="() => Butaca.EsAccesible" class="text-danger" />
                 </div>
 
@@ -54,42 +56,37 @@ else
                     </InputSelect>
                     <ValidationMessage For="() => Butaca.IdSala" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="/butacas" class="btn btn-secondary ms-2">Volver</a>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/butacas">Back to List</a>
-</div>
-
 @code {
-    [SupplyParameterFromQuery]
-    private int IdButaca { get; set; }
+    [Parameter]
+    public int IdButaca { get; set; }
 
-    [SupplyParameterFromForm]
     private Butaca? Butaca { get; set; }
     private List<Sala> Salas = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        Butaca ??= await context.Butacas.FirstOrDefaultAsync(m => m.IdButaca == IdButaca);
+
         Salas = await context.Salas.ToListAsync();
 
-        Butaca ??= await context.Butacas
-            .Include(f => f.IdSalaNavigation)
-            .FirstOrDefaultAsync(f => f.IdButaca == IdButaca);
+        Butaca = await context.Butacas
+            .Include(b => b.IdSalaNavigation)
+            .FirstOrDefaultAsync(b => b.IdButaca == IdButaca);
 
         if (Butaca is null)
         {
-            NavigationManager.NavigateTo("notfound");
+            NavigationManager.NavigateTo("/notfound");
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task UpdateButaca()
     {
         using var context = DbFactory.CreateDbContext();
@@ -98,25 +95,24 @@ else
         try
         {
             await context.SaveChangesAsync();
+            NavigationManager.NavigateTo("/butacas");
         }
         catch (DbUpdateConcurrencyException)
         {
             if (!ButacaExists(Butaca!.IdButaca))
             {
-                NavigationManager.NavigateTo("notfound");
+                NavigationManager.NavigateTo("/notfound");
             }
             else
             {
                 throw;
             }
         }
-
-        NavigationManager.NavigateTo("/butacas");
     }
 
-    private bool ButacaExists(int idbutaca)
+    private bool ButacaExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.Butacas.Any(e => e.IdButaca == idbutaca);
+        return context.Butacas.Any(e => e.IdButaca == id);
     }
 }

@@ -1,54 +1,112 @@
 ﻿@page "/reservas/create"
-@using Microsoft.EntityFrameworkCore
 @using WebCinemax.Models
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@inject ReservaService ReservaService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<h3>Crear nueva reserva</h3>
 
-<h1>Create</h1>
+@if (nuevaReserva == null || funciones == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <EditForm Model="@nuevaReserva" OnValidSubmit="@GuardarReserva">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-<h2>Reserva</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Reserva" OnValidSubmit="AddReserva" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="fechareserva" class="form-label">FechaReserva:</label> 
-                <InputDate id="fechareserva" @bind-Value="Reserva.FechaReserva" class="form-control" /> 
-                <ValidationMessage For="() => Reserva.FechaReserva" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="confirmada" class="form-label">Confirmada:</label> 
-                <InputCheckbox id="confirmada" @bind-Value="Reserva.Confirmada" class="form-check-input" /> 
-                <ValidationMessage For="() => Reserva.Confirmada" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="idfuncion" class="form-label">IdFuncion:</label> 
-                <InputNumber id="idfuncion" @bind-Value="Reserva.IdFuncion" class="form-control" /> 
-                <ValidationMessage For="() => Reserva.IdFuncion" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
-</div>
+        <!-- Selección de función -->
+        <div class="form-group">
+            <label>Función</label>
+            <select class="form-control" @bind="idFuncionSeleccionada">
+                <option value="">Seleccione una función</option>
+                @foreach (var funcion in funciones)
+                {
+                    <option value="@funcion.IdFuncion">
+                        @($"{funcion.IdPeliculaNavigation?.Titulo} - {funcion.FechaHora:g}")
+                    </option>
+                }
+            </select>
+        </div>
 
-<div>
-    <a href="/reservas">Back to List</a>
-</div>
+        <!-- Selección de butacas (múltiple) -->
+        <div class="form-group mt-3">
+            <label>Butacas disponibles</label>
+            <select multiple class="form-control" @onchange="OnButacasChanged">
+                @foreach (var b in butacasDisponibles)
+                {
+                    <option value="@b.IdButaca">@($"Fila {b.Fila}, N° {b.Numero}")</option>
+                }
+            </select>
+            <small class="text-muted">Mantenga presionada Ctrl para seleccionar múltiples butacas.</small>
+        </div>
+
+        <!-- Confirmada -->
+        <div class="form-group mt-3">
+            <label>Confirmada</label>
+            <InputCheckbox @bind-Value="nuevaReserva.Confirmada" class="form-check-input" />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+        <button type="button" class="btn btn-secondary mt-3" @onclick="Volver">Cancelar</button>
+    </EditForm>
+}
 
 @code {
-    [SupplyParameterFromForm]
-    private Reserva Reserva { get; set; } = new();
+    private Reserva nuevaReserva = new();
+    private List<Funcion> funciones = new();
+    private List<Butaca> butacasDisponibles = new();
+    private List<int> butacasSeleccionadas = new();
+    private int idFuncionSeleccionada;
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task AddReserva()
+    private int IdFuncionSeleccionada
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Reservas.Add(Reserva);
-        await context.SaveChangesAsync();
+        get => idFuncionSeleccionada;
+        set
+        {
+            if (idFuncionSeleccionada != value)
+            {
+                idFuncionSeleccionada = value;
+                _ = CargarButacasDisponibles(); // carga butacas al cambiar la función
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        funciones = await ReservaService.ObtenerFuncionesAsync();
+    }
+
+    private async Task CargarButacasDisponibles()
+    {
+        if (idFuncionSeleccionada == 0)
+        {
+            butacasDisponibles.Clear();
+            butacasSeleccionadas.Clear();
+            return;
+        }
+
+        butacasDisponibles = await ReservaService.ObtenerButacasDisponiblesPorFuncionAsync(idFuncionSeleccionada);
+        butacasSeleccionadas.Clear(); // limpiar selección anterior
+        StateHasChanged();
+    }
+
+    // Conversión manual para select múltiple
+    private void OnButacasChanged(ChangeEventArgs e)
+    {
+        var selected = e.Value as string[] ?? Array.Empty<string>();
+        butacasSeleccionadas = selected.Select(int.Parse).ToList();
+    }
+
+    private async Task GuardarReserva()
+    {
+        if (idFuncionSeleccionada == 0 || !butacasSeleccionadas.Any())
+            return;
+
+        nuevaReserva.IdFuncion = idFuncionSeleccionada;
+        await ReservaService.CreateReservaAsync(nuevaReserva, butacasSeleccionadas);
         NavigationManager.NavigateTo("/reservas");
     }
+
+    private void Volver() => NavigationManager.NavigateTo("/reservas");
 }

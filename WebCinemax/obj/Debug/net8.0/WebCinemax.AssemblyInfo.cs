@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebCinemax")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7c7ca5113d3c3b016404ca22209cef14567324dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35916755bc4c9f200bc76653d1aa9d0adc62e18b")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebCinemax")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebCinemax")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

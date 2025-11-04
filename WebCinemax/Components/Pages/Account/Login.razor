@@ -13,16 +13,16 @@
         <EditForm Model="@Model" OnValidSubmit="Authenticate" FormName="LoginForm">
             <DataAnnotationsValidator/>
             <div class="mb-3 text-center flex-column">
-                <img src="/images/avatar.png" style="max-height:5rem;" />
+                <img src=".../Components/Images/usuariologin.png" style="max-height:5rem;" />
                 <h3>Login</h3>
             </div>
             <div class="mb-3">
-                <label>Username</label>
+                <label>Usuario</label>
                 <InputText @bind-Value="Model.Username" class="form-control" placeholder="Nombre de usuario"/>
                 <ValidationMessage For="() => Model.Username"/>
             </div>
             <div class="mb-3">
-                <label>Password</label>
+                <label>Contraseña</label>
                 <InputText @bind-Value="Model.PasswordHash" class="form-control" type="password" placeholder="Contraseña" />
                 <ValidationMessage For="() => Model.PasswordHash" />
             </div>
@@ -30,7 +30,7 @@
                 <span class="text-danger">@errorMessage</span>
             </div>
             <div class="mb-3 d-grid gap-2">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
             </div>
         </EditForm>
     </div>

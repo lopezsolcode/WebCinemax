@@ -1,50 +1,64 @@
 ﻿@page "/butacas"
-@using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using WebCinemax.Models
-@implements IAsyncDisposable
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using WebCinemax.Services
+@inject ButacaService ButacaService
+@inject NavigationManager Navigation
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Butacas</PageTitle>
 
-<h1>Index</h1>
+<h1>Butacas</h1>
 
 <p>
-    <a href="butacas/create">Create New</a>
+    <button class="btn btn-primary" @onclick="CrearNueva">Crear nueva</button>
 </p>
-@if (Butacas is null)
+
+@if (Butacas == null)
 {
     <p><em>Cargando...</em></p>
 }
-else{
-
-<QuickGrid Class="table table-striped" Items="Butacas.AsQueryable()">
-    <PropertyColumn Property="butaca => butaca.Numero" />
-    <PropertyColumn Property="butaca => butaca.Fila" />
-    <PropertyColumn Property="butaca => butaca.EsVip" />
-    <PropertyColumn Property="butaca => butaca.EsAccesible" />
-    <TemplateColumn Title="Sala">
-            @context.IdSalaNavigation?.Nombre
-    </TemplateColumn>
-
-    <TemplateColumn Context="butaca">
-        <a href="@($"butacas/edit?idbutaca={butaca.IdButaca}")">Edit</a> |
-        <a href="@($"butacas/details?idbutaca={butaca.IdButaca}")">Details</a> |
-        <a href="@($"butacas/delete?idbutaca={butaca.IdButaca}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Fila</th>
+                <th>VIP</th>
+                <th>Accesible</th>
+                <th>Sala</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var butaca in Butacas)
+            {
+                <tr>
+                    <td>@butaca.Numero</td>
+                    <td>@butaca.Fila</td>
+                    <td>@(butaca.EsVip ? "Sí" : "No")</td>
+                    <td>@(butaca.EsAccesible ? "Sí" : "No")</td>
+                    <td>@butaca.IdSalaNavigation?.Nombre</td>
+                    <td>
+                        <button class="btn btn-secondary btn-sm" @onclick="() => Editar(butaca.IdButaca)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => Eliminar(butaca.IdButaca)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
-    private CineDbContext context = default!;
-    private List<Butaca> Butacas = new();
+    private List<Butaca>? Butacas;
+
     protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
-        Butacas = await context.Butacas
-            .Include(b => b.IdSalaNavigation)
-            .ToListAsync();
+        Butacas = await ButacaService.GetAllAsync();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private void CrearNueva() => Navigation.NavigateTo("/butacas/create");
+
+    private void Editar(int id) => Navigation.NavigateTo($"/butacas/edit/{id}");
+
+    private void Eliminar(int id) => Navigation.NavigateTo($"/butacas/delete?idbutaca={id}");
 }
