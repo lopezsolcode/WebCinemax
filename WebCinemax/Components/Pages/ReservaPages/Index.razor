@@ -23,10 +23,12 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>ID Reserva</th> <!-- ✅ Nueva columna -->
                 <th>Fecha de Reserva</th>
                 <th>Confirmada</th>
                 <th>Película</th>
                 <th>Sala</th>
+                <th>Butacas</th> <!-- ✅ Nueva columna -->
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -34,10 +36,24 @@ else
             @foreach (var r in reservas)
             {
                 <tr>
+                    <td>@r.IdReserva</td> <!-- ✅ Muestra el número de ID -->
                     <td>@r.FechaReserva.ToString("g")</td>
                     <td>@(r.Confirmada ? "Sí" : "No")</td>
                     <td>@r.IdFuncionNavigation?.IdPeliculaNavigation?.Titulo</td>
                     <td>@r.IdFuncionNavigation?.IdSalaNavigation?.Nombre</td>
+
+                    <!-- ✅ Muestra las butacas reservadas -->
+                    <td>
+                        @if (r.ReservaButacas != null && r.ReservaButacas.Any())
+                        {
+                            @string.Join(", ", r.ReservaButacas.Select(b => $"F{b.IdButacaNavigation?.Fila}-N{b.IdButacaNavigation?.Numero}"))
+                        }
+                        else
+                        {
+                            <em>Sin butacas</em>
+                        }
+                    </td>
+
                     <td>
                         <button class="btn btn-secondary btn-sm" @onclick="() => Editar(r.IdReserva)">Editar</button>
                         <button class="btn btn-danger btn-sm" @onclick="() => EliminarConfirmado(r.IdReserva)">Eliminar</button>

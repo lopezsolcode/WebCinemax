@@ -1,63 +1,88 @@
-﻿@page "/reservas/delete"
-@using Microsoft.EntityFrameworkCore
+﻿@page "/reservas/delete/{IdReserva:int}"
 @using WebCinemax.Models
-@inject IDbContextFactory<WebCinemax.Models.CineDbContext> DbFactory
+@using WebCinemax.Services
+@inject ReservaService ReservaService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Delete</PageTitle>
+<PageTitle>Eliminar Reserva</PageTitle>
 
-<h1>Delete</h1>
+<h3 class="text-danger">Eliminar Reserva</h3>
 
-<p>Are you sure you want to delete this?</p>
-<div>
-    <h2>Reserva</h2>
-    <hr />
-    @if (reserva is null)
+@if (reserva == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <div class="alert alert-warning">
+        <strong>¿Está seguro de que desea eliminar esta reserva?</strong><br />
+        Esta acción no se puede deshacer.
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">ID de Reserva</dt>
+        <dd class="col-sm-9">@reserva.IdReserva</dd>
+
+        <dt class="col-sm-3">Fecha de Reserva</dt>
+        <dd class="col-sm-9">@reserva.FechaReserva.ToString("g")</dd>
+
+        <dt class="col-sm-3">Confirmada</dt>
+        <dd class="col-sm-9">@((reserva.Confirmada) ? "Sí" : "No")</dd>
+
+        <dt class="col-sm-3">Película</dt>
+        <dd class="col-sm-9">@reserva.IdFuncionNavigation?.IdPeliculaNavigation?.Titulo</dd>
+
+        <dt class="col-sm-3">Sala</dt>
+        <dd class="col-sm-9">@reserva.IdFuncionNavigation?.IdSalaNavigation?.Nombre</dd>
+    </dl>
+
+    <div class="mt-3">
+        <button class="btn btn-danger" @onclick="EliminarReserva">Eliminar</button>
+        <button class="btn btn-secondary ms-2" @onclick="@VolverALista">Cancelar</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(mensaje))
     {
-        <p><em>Loading...</em></p>
+        <div class="alert alert-info mt-3">@mensaje</div>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">FechaReserva</dt>
-            <dd class="col-sm-10">@reserva.FechaReserva</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Confirmada</dt>
-            <dd class="col-sm-10">@reserva.Confirmada</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">IdFuncion</dt>
-            <dd class="col-sm-10">@reserva.IdFuncion</dd>
-        </dl>
-        <EditForm method="post" Model="reserva" OnValidSubmit="DeleteReserva" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(reserva is null)">Delete</button> |
-            <a href="/reservas">Back to List</a>
-        </EditForm>
-    }
-</div>
+}
 
 @code {
     private Reserva? reserva;
+    private string? mensaje;
 
-    [SupplyParameterFromQuery]
-    private int IdReserva { get; set; }
+    [Parameter]
+    public int IdReserva { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        reserva = await context.Reservas.FirstOrDefaultAsync(m => m.IdReserva == IdReserva);
-
-        if (reserva is null)
+        reserva = await ReservaService.GetByIdAsync(IdReserva);
+        if (reserva == null)
         {
-            NavigationManager.NavigateTo("notfound");
+            NavigationManager.NavigateTo("/notfound");
         }
     }
 
-    private async Task DeleteReserva()
+    private async Task EliminarReserva()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Reservas.Remove(reserva!);
-        await context.SaveChangesAsync();
+        if (reserva != null)
+        {
+            var exito = await ReservaService.DeleteAsync(reserva.IdReserva);
+            if (exito)
+            {
+                mensaje = "La reserva fue eliminada correctamente.";
+                await Task.Delay(1500);
+                NavigationManager.NavigateTo("/reservas");
+            }
+            else
+            {
+                mensaje = "Ocurrió un error al intentar eliminar la reserva.";
+            }
+        }
+    }
+
+    private void VolverALista()
+    {
         NavigationManager.NavigateTo("/reservas");
     }
 }

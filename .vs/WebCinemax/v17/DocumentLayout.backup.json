@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\reservapages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\reservapages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\services\\reservaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\services\\reservaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\reservapages\\delete.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\reservapages\\delete.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\salapages\\delete.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\salapages\\delete.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\reservapages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\reservapages\\index.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\reservapages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\reservapages\\create.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\components\\pages\\reservapages\\edit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|solutionrelative:webcinemax\\components\\pages\\reservapages\\edit.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3CA76BE2-6FFF-4757-9D04-FB606BFF2193}|WebCinemax\\WebCinemax.csproj|c:\\users\\usuario\\source\\repos\\webcinemax\\webcinemax\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -26,7 +38,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 319,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,33 +54,72 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
+              "Title": "Delete.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Delete.razor",
+              "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\ReservaPages\\Delete.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Delete.razor",
+              "RelativeToolTip": "WebCinemax\\Components\\Pages\\ReservaPages\\Delete.razor",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAEUAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-05T00:07:07.877Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Delete.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\SalaPages\\Delete.razor",
+              "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\SalaPages\\Delete.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\SalaPages\\Delete.razor",
+              "RelativeToolTip": "WebCinemax\\Components\\Pages\\SalaPages\\Delete.razor",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-05T00:05:55.834Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Edit.razor",
+              "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Edit.razor",
+              "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\ReservaPages\\Edit.razor",
+              "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Edit.razor",
+              "RelativeToolTip": "WebCinemax\\Components\\Pages\\ReservaPages\\Edit.razor",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAAAFIAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-11-04T23:54:57.169Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "Create.razor",
               "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Create.razor",
               "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\ReservaPages\\Create.razor",
               "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Create.razor",
               "RelativeToolTip": "WebCinemax\\Components\\Pages\\ReservaPages\\Create.razor",
-              "ViewState": "AgIAACQAAAAAAAAAAAAAAG8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAD0AAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-11-04T22:04:34.732Z",
+              "WhenOpened": "2025-11-04T22:53:25.874Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ReservaService.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Services\\ReservaService.cs",
               "RelativeDocumentMoniker": "WebCinemax\\Services\\ReservaService.cs",
               "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Services\\ReservaService.cs",
               "RelativeToolTip": "WebCinemax\\Services\\ReservaService.cs",
-              "ViewState": "AgIAADMAAAAAAAAAAAAowD0AAAAWAAAAAAAAAA==",
+              "ViewState": "AgIAAHEAAAAAAAAAAAAuwIAAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-04T21:44:06.024Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Program.cs",
               "RelativeDocumentMoniker": "WebCinemax\\Program.cs",
@@ -76,18 +127,17 @@
               "RelativeToolTip": "WebCinemax\\Program.cs",
               "ViewState": "AgIAAA8AAAAAAAAAAAAAABYAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-04T21:43:04.888Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-04T21:43:04.888Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Index.razor",
               "DocumentMoniker": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Index.razor",
               "RelativeDocumentMoniker": "WebCinemax\\Components\\Pages\\ReservaPages\\Index.razor",
               "ToolTip": "C:\\Users\\Usuario\\source\\repos\\WebCinemax\\WebCinemax\\Components\\Pages\\ReservaPages\\Index.razor",
               "RelativeToolTip": "WebCinemax\\Components\\Pages\\ReservaPages\\Index.razor",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAAAB0AAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAAAFgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-11-04T21:38:50.02Z",
               "EditorCaption": ""

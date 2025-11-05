@@ -18,7 +18,7 @@ else
         <!-- Selección de función -->
         <div class="form-group">
             <label>Función</label>
-            <select class="form-control" @bind="idFuncionSeleccionada">
+            <select class="form-control" @bind="IdFuncionSeleccionada">
                 <option value="">Seleccione una función</option>
                 @foreach (var funcion in funciones)
                 {
@@ -67,11 +67,10 @@ else
             if (idFuncionSeleccionada != value)
             {
                 idFuncionSeleccionada = value;
-                _ = CargarButacasDisponibles(); // carga butacas al cambiar la función
+                _ = CargarButacasDisponibles();
             }
         }
     }
-
     protected override async Task OnInitializedAsync()
     {
         funciones = await ReservaService.ObtenerFuncionesAsync();
@@ -79,15 +78,15 @@ else
 
     private async Task CargarButacasDisponibles()
     {
-        if (idFuncionSeleccionada == 0)
+        if (IdFuncionSeleccionada == 0)
         {
             butacasDisponibles.Clear();
             butacasSeleccionadas.Clear();
             return;
         }
 
-        butacasDisponibles = await ReservaService.ObtenerButacasDisponiblesPorFuncionAsync(idFuncionSeleccionada);
-        butacasSeleccionadas.Clear(); // limpiar selección anterior
+        butacasDisponibles = await ReservaService.ObtenerButacasDisponiblesPorFuncionAsync(IdFuncionSeleccionada);
+        butacasSeleccionadas.Clear();
         StateHasChanged();
     }
 
